@@ -23,7 +23,9 @@ connection.connect(function (err) {
 
 var table = function () {
   connection.query("SELECT * FROM products", function (err, res) {
+    console.log('  ' + 'item_id' + " | " + 'product_name' + " | " + 'department_name' + " | " + 'price' + " | " + 'stock_quantity' + "\n");
     for (var i = 0; i < res.length; i++) {
+      
       console.log('  ' + res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + " | " + res[i].price + " | " + res[i].stock_quantity + "\n");
     }
     store();
@@ -57,7 +59,7 @@ function store() {
         }
         else {
 
-          console.log('\n ' + res[0].item_id + " | " + res[0].product_name + " | " + res[0].department_name + " | " + res[0].price + " | " + res[0].stock_quantity + "\n");
+          console.log('\n '+ res[0].product_name + " | "+ 'x'+answer.units+"\n");
           purchase = res[0].stock_quantity - answer.units
           totalCost = answer.units * res[0].price
           buy(answer.item, purchase, totalCost)
@@ -71,8 +73,12 @@ function store() {
 function buy(ID, amount, total) {
   connection.query("UPDATE bamazon.products SET stock_quantity =" + amount + " WHERE item_id = " + ID, function (err, res) {
     console.log(' your total is $' + total);
-    console.log('\n thank your for shopping with us');
+    console.log('\n thank you for shopping with us');
   })
+  connection.query("SELECT * FROM bamazon.products WHERE item_id=" + ID, function (err, res) {
+    console.log('\n ' + res[0].item_id + " | " + res[0].product_name + " | " + res[0].department_name + " | " + res[0].price + " | " + res[0].stock_quantity + "\n");
+  })
+
   connection.end()
 }
 
